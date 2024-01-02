@@ -8,6 +8,8 @@ pipeline {
             environment {
                 LOG_LEVEL='INFO'
             }
+
+            //Steps that run within the parallel block run at the same time
             parallel {
                 stage('linux-arm64') {
                     agent any
