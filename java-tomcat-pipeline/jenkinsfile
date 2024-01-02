@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+    
+    environment {
+      VERSION = '0.1.0'
+      RELEASE_VERSION = 'R.2'
+    }
+
+    stages {
+    //Check environment has required tools to run pipeline
+      stage('Audit tools') {
+        steps {
+          sh '''
+              git version
+              java -version
+              mvn -version
+          '''
+        }
+      }
+
+    // Run our unit tests
+      stage('Unit Test') {
+        steps {
+          dir('./java-tomcat-application-sample') {
+            sh '''
+              echo "Executing Unit Tests..."
+              mvn test
+          '''
+          }
+        }
+      }
+
+    //Build our application given tests are sucessfull
+      stage('Build') {
+        steps {
+          echo "Building version: ${VERSION} with suffix: ${RELEASE_VERSION}"
+          echo 'Mention your Application Build Code here!!!'
+          sh 'mvn -f java-tomcat-sample/pom.xml clean package'
+        }
+      }
+    }
+}
